@@ -15,16 +15,14 @@ public class Main{
             int R = Integer.parseInt(st.nextToken());
             String S = st.nextToken();
             
-            String[] SArr = S.split("");
-
-            //S의 길이만큼 반복
-            for(int j = 0; j<SArr.length; j++){
-                //R번 만큼 반복
-                for(int k = 0; k<R; k++)
-                    sb.append(SArr[j]);
+            for(int j = 0; j < S.length(); j++){
+                int count = 0;
+                
+                while(count < R){
+                    sb.append(S.charAt(j));
+                    count++;
+                }
             }
-
-            //문자열이 끝날 때마다 \n 추가
             sb.append("\n");
             
         }
