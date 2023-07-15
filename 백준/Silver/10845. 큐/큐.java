@@ -1,52 +1,70 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
 
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
+import java.io.BufferedWriter;
+import java.util.StringTokenizer;
+import java.util.Queue;
+import java.util.LinkedList;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        Queue<Integer> q = new LinkedList<Integer>();
-        int b = 0;
 
-        int n = Integer.parseInt(br.readLine());
-        for (int i = 0; i < n; i++) {
+    public static int back = 0;
+
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        Queue<Integer> q = new LinkedList<>();
+
+        int N = Integer.parseInt(br.readLine());
+        while(N-- > 0){
             StringTokenizer st = new StringTokenizer(br.readLine());
-            String S = st.nextToken();
-            switch (S) {
+            switch (st.nextToken()){
                 case "push":
-                    int num = Integer.parseInt(st.nextToken());
-                    q.add(num);
-                    b = num;
+                     //큐의 삽입,삭제,맨앞 값 탐색 메소드가 두개씩 있다. 리턴값이 다름
+                    back = Integer.parseInt(st.nextToken());
+                    q.offer(back);
                     break;
+
                 case "pop":
-                    if (q.isEmpty()) {
-                        sb.append("-1\n");
-                    } else {
-                        sb.append(q.remove() + "\n");
+                    if(q.isEmpty()) {
+                        bw.write(-1 + "\n");
                     }
+                    else
+                        bw.write(q.poll() + "\n");
                     break;
+
                 case "size":
-                    sb.append(q.size() + "\n");
+                    bw.write(q.size() + "\n");
                     break;
+
                 case "empty":
-                    if (q.isEmpty()) sb.append("1\n");
-                    else sb.append("0\n");
+                    if(q.isEmpty()){
+                        bw.write(1+"\n");
+                    }
+                    else
+                        bw.write(0+"\n");
                     break;
+
                 case "front":
-                    if (q.isEmpty()) sb.append("-1\n");
-                    else sb.append(q.peek() + "\n");
+                    if(q.isEmpty()) {
+                        bw.write(-1 + "\n");
+                    }
+                    else
+                        bw.write(q.peek() + "\n");
                     break;
+
                 case "back":
-                    if (q.isEmpty()) sb.append("-1\n");
-                    else sb.append(b + "\n");
-                    break;
+                    if(q.isEmpty())
+                        bw.write(-1+"\n");
+                    else
+                        bw.write(back+"\n");
+
             }
         }
-        System.out.println(sb);
+        bw.flush();
+        bw.close();
     }
 }
