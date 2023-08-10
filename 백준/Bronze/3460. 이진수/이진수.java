@@ -15,7 +15,7 @@ public class Main {
             int index = 0;
 
             while(n>0){
-                if(n%2 == 1){
+                if(n%2 == 1){   //2로 나눴을 때 1이면 이진수로 1이고, 0이면 0이다.
                     System.out.print(index + " ");
                 }
 
