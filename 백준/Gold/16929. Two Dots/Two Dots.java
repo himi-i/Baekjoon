@@ -7,9 +7,9 @@ public class Main {
     static int n, m;
     static char[][] board;
     static boolean[][] visited;
-    static int[] dx = {1, -1, 0, 0};
+    static int[] dx = {1, -1, 0, 0}; // 하, 상, 우, 좌
     static int[] dy = {0, 0, 1, -1};
-    static boolean hasCycle = false;
+    static boolean cycle = false; 
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -22,14 +22,16 @@ public class Main {
 
         for (int i = 0; i < n; i++) {
             String line = br.readLine();
-            board[i] = line.toCharArray();
+            for (int j = 0; j < m; j++) {
+                board[i][j] = line.charAt(j);
+            }
         }
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (!visited[i][j]) {
                     dfs(i, j, -1, -1, board[i][j]);
-                    if (hasCycle) {
+                    if (cycle) {
                         System.out.println("Yes");
                         return;
                     }
@@ -47,14 +49,13 @@ public class Main {
             int nx = x + dx[dir];
             int ny = y + dy[dir];
 
-            if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
-            if (board[nx][ny] != color) continue;
-
-            if (!visited[nx][ny]) {
-                dfs(nx, ny, x, y, color);
-            } else if (!(nx == px && ny == py)) {
-                hasCycle = true;
-                return;
+            if (nx >= 0 && ny >= 0 && nx < n && ny < m && board[nx][ny] == color) {
+                if (!visited[nx][ny]) {
+                    dfs(nx, ny, x, y, color);
+                } else if (!(nx == px && ny == py)) {
+                    cycle = true;
+                    return;
+                }
             }
         }
     }
