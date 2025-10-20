@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Main {
     static int N, M;
-    static int[][] city;
     static List<int[]> houses = new ArrayList<>();
     static List<int[]> chickens = new ArrayList<>();
     static int minDistance = Integer.MAX_VALUE;
@@ -15,17 +14,17 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-
-        city = new int[N][N];
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
-                city[i][j] = Integer.parseInt(st.nextToken());
-                if (city[i][j] == 1) houses.add(new int[]{i, j});
-                else if (city[i][j] == 2) chickens.add(new int[]{i, j});
+                int value = Integer.parseInt(st.nextToken());
+                //좌표값을 각각 저장
+                if (value == 1) houses.add(new int[]{i, j});
+                else if (value == 2) chickens.add(new int[]{i, j});
             }
         }
 
@@ -33,25 +32,37 @@ public class Main {
         System.out.println(minDistance);
     }
 
-    static void dfs(int idx, int depth, int[] selected) {
+    static void dfs(int idx, int depth, int[] result) {
         if (depth == M) {
             int sum = 0;
             for (int[] house : houses) {
                 int minDist = Integer.MAX_VALUE;
                 for (int i = 0; i < M; i++) {
-                    int[] chicken = chickens.get(selected[i]);
+                    int[] chicken = chickens.get(result[i]);
                     int dist = Math.abs(house[0] - chicken[0]) + Math.abs(house[1] - chicken[1]);
-                    minDist = Math.min(minDist, dist);
+                    minDist = Math.min(minDist, dist); // 집 하나 당 치킨거리 구하기
                 }
-                sum += minDist;
+                sum += minDist; // 해당 조합에서 최소 도시의 치킨 거리
             }
-            minDistance = Math.min(minDistance, sum); //최소 거리 계산 
+            minDistance = Math.min(minDistance, sum); //모든 조합에서 최소
             return;
         }
 
+        // 모든 조합을 만드는 반복문
         for (int i = idx; i < chickens.size(); i++) {
-            selected[depth] = i;
-            dfs(i + 1, depth + 1, selected);
+            result[depth] = i;
+            dfs(i + 1, depth + 1, result);
         }
     }
+
+    /*
+dfs(0,0,[])  i = 0 선택
+dfs(1, 1, [0, _])
+dfs(2, 2, [0,1])
+dfs(3, 2, [0,2])
+dfs(4, 2, [0,3])
+dfs(1, 1, [0,_]) 루프 종료
+dfs(0,0,[]) 다시 들어옴
+dfs(2, 1, [1,_]) 다시 시작 i = 1 선택
+     */
 }
