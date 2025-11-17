@@ -1,52 +1,65 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.HashSet;
 
 public class Solution {
-    static int max;
-    static int changeCount;
-    static char[] numbers;
-    static Set<String> visited;
 
-    public static void main(String[] args) throws IOException {
+    static String num;
+    static int change;
+    static int answer;
+    static HashSet<String>[] visited;
+
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine().trim());
 
-        for (int testCase = 1; testCase <= T; testCase++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            numbers = st.nextToken().toCharArray();
-            changeCount = Integer.parseInt(st.nextToken());
-            max = 0;
-            visited = new HashSet<>();
+        int T = Integer.parseInt(br.readLine());
 
-            dfs(0);
+        for (int tc = 1; tc <= T; tc++) {
+            String[] input = br.readLine().split(" ");
+            num = input[0];
+            change = Integer.parseInt(input[1]);
 
-            System.out.println("#" + testCase + " " + max);
+            visited = new HashSet[change + 1];
+            for (int i = 0; i <= change; i++) {
+                visited[i] = new HashSet<>();
+            }
+
+            answer = 0;
+            dfs(num, 0);
+
+            System.out.println("#" + tc + " " + answer);
         }
     }
 
-    static void dfs(int depth) {
-        if (depth == changeCount) {
-            max = Math.max(max, Integer.parseInt(String.valueOf(numbers)));
+   
+    static void dfs(String now, int cnt) {
+       
+        if (cnt == change) {
+            answer = Math.max(answer, Integer.parseInt(now));
             return;
         }
 
-        String state = new String(numbers) + "_" + depth;
-        if (visited.contains(state)) return;
-        visited.add(state);
+       
+        if (visited[cnt].contains(now)) return;
+        visited[cnt].add(now);
 
-        int len = numbers.length;
+       
+        char[] arr = now.toCharArray();
+        int len = arr.length;
+
         for (int i = 0; i < len - 1; i++) {
             for (int j = i + 1; j < len; j++) {
-                swap(i, j);
-                dfs(depth + 1);
-                swap(i, j); // 원상 복구
+
+                swap(arr, i, j);
+                dfs(new String(arr), cnt + 1);
+                swap(arr, i, j); 
             }
         }
     }
 
-    static void swap(int i, int j) {
-        char temp = numbers[i];
-        numbers[i] = numbers[j];
-        numbers[j] = temp;
+    static void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 }
