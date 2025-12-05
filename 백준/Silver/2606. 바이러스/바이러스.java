@@ -1,55 +1,54 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
 
-	static boolean[] check;
-	static int[][] arr;
-	static int count = 0;
-	
-	static int node, line;
-	
-	static Queue<Integer> q = new LinkedList<>();
+    static ArrayList<Integer>[] graph;
+    static boolean[] visited;
+    static int count = 0; // 1번과 연결된 컴퓨터 수
 
-	public static void main(String[] args) throws IOException {
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		
-		node = Integer.parseInt(br.readLine());
-		line = Integer.parseInt(br.readLine());
-	
-		arr = new int[node+1][node+1];
-		check = new boolean[node+1];
-		
-		for(int i = 0 ; i < line ; i ++) {
-			StringTokenizer str = new StringTokenizer(br.readLine());
-			
-			int a = Integer.parseInt(str.nextToken());
-			int b = Integer.parseInt(str.nextToken());
-			
-			arr[a][b] = arr[b][a] =  1;	
-		}
-		
-			dfs(1);
-			
-			System.out.println(count-1);
-		
-		}
-	public static void dfs(int start) {
-		
-		check[start] = true;
-		count++;
-		
-		for(int i = 0 ; i <= node ; i++) {
-			if(arr[start][i] == 1 && !check[i])
-				dfs(i);
-		}
-		
-	}
-	
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(br.readLine()); // 컴퓨터 수
+        int M = Integer.parseInt(br.readLine()); // 연결 수
+
+        graph = new ArrayList[N + 1];
+        visited = new boolean[N + 1];
+
+        // 인접 리스트 초기화
+        for (int i = 1; i <= N; i++) {
+            graph[i] = new ArrayList<>();
+        }
+
+        // 연결 정보 입력
+        for (int i = 0; i < M; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+
+            // 무방향 그래프이므로 양쪽에 연결
+            graph[a].add(b);
+            graph[b].add(a);
+        }
+
+        dfs(1); // 1번 컴퓨터부터 감염 시작
+
+        System.out.println(count);
+    }
+
+    static void dfs(int x) {
+        visited[x] = true;
+
+        for (int next : graph[x]) {
+            if (!visited[next]) {
+                count++; // 1번 제외 감염된 컴퓨터 수 증가
+                dfs(next);
+            }
+        }
+    }
 }
