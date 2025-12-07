@@ -5,12 +5,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-public class Main{
+public class Main {
 
     static int[][] map;
-    static boolean[][] visited;
     static int N, M; 
-    static int[][] count;
     static int[] dx = {-1, 0, 1, 0};
     static int[] dy = {0, 1, 0, -1};
 
@@ -22,8 +20,6 @@ public class Main{
         M = Integer.parseInt(st.nextToken());
 
         map = new int[N][M];
-        visited = new boolean[N][M];
-        count = new int[N][M]; 
 
         for(int i = 0; i < N; i++){
             String line = br.readLine();
@@ -32,20 +28,16 @@ public class Main{
             }
         }
 
-        bfs(0,0);
+        bfs(0, 0);
 
-        System.out.println(count[N-1][M-1]);
-
+        System.out.println(map[N-1][M-1]);   // 최종 거리 출력
     }
 
     static void bfs(int x, int y){
         Queue<int[]> q = new LinkedList<>();
-        q.add(new int[]{x,y});
-        visited[x][y] = true;
-        count[x][y] = 1;
+        q.add(new int[]{x, y});
 
         while(!q.isEmpty()){
-
             int[] cur = q.poll();
             int cx = cur[0];
             int cy = cur[1];
@@ -53,20 +45,19 @@ public class Main{
             for(int i = 0; i < 4; i++){
                 int nx = cx + dx[i];
                 int ny = cy + dy[i];
-            
 
-            if(nx < 0 || ny < 0 || nx >= N || ny >= M ) continue;
+                // 범위 체크
+                if(nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
 
-            if(map[nx][ny] == 0) continue;
+                // 벽이거나 이미 방문한 칸(map != 1)이면 스킵
+                if(map[nx][ny] != 1) continue;
 
-            if(visited[nx][ny]) continue;
+                // 거리 갱신 (현재 거리 + 1)
+                map[nx][ny] = map[cx][cy] + 1;
 
-            q.add(new int[]{nx,ny});
-            visited[nx][ny] = true;
-            count[nx][ny] = count[cx][cy] + 1;
-
+                // 큐에 추가
+                q.add(new int[]{nx, ny});
             }
         }
-
     }
 }
