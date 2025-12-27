@@ -1,19 +1,31 @@
+import sys
 from collections import deque
 
-n, k = map(int, input().split())
-MAX = 100000
-visited = [-1] * (MAX + 1)
+input = sys.stdin.readline
 
-q = deque([n])
-visited[n] = 0
-while q:
-    x = q.popleft()
+def main():
+    N, K = map(int, input().split())
 
-    if x == k:
-        break
-    for nx in (x - 1, x + 1, x * 2):
-        if(0 <= nx <= MAX and visited[nx] == -1):
-            visited[nx] = visited[x] + 1
-            q.append(nx)
+    if N >= K:
+        print(N - K)
+        sys.exit()
 
-print(visited[k])
+    MAX = 100000
+    visited = [-1] * (MAX + 1)
+    visited[N] = 0
+    q = deque([N])   
+
+    while q:
+        x = q.popleft()
+        if x == K:
+            break
+
+        for nx in (x - 1, x + 1, x * 2):
+            if 0 <= nx <= MAX and visited[nx] == -1:
+                visited[nx] = visited[x] + 1
+                q.append(nx)
+
+    print(visited[K])
+
+if __name__ == "__main__":
+    main()
