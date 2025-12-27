@@ -1,65 +1,51 @@
-from collections import deque
 import sys
+from collections import deque
 
 input = sys.stdin.readline
 
-# M: 가로, N: 세로, H: 높이
-M, N, H = map(int, input().split())
+dz = [1, -1, 0, 0, 0, 0]
+dy = [0, 0, 1, -1, 0, 0]
+dx = [0, 0, 0, 0, 1, -1]
 
+def main():
 
-box = [ [list(map(int, input().split())) for _ in range(N)] for _ in range(H) ]
+    M, N, H = map(int, input().split())
 
-#box = [
-#    [   # 0층
-#        [1, 0, -1, 0, 0],
-#        [0, 0, 0, 0, 0],
-#        [0, -1, 0, 1, 0]
-#    ],
-#    [   # 1층
-#        [0, 0, 0, 0, 0],
-#        [-1, -1, 0, 0, 0],
-#        [1, 0, 0, 0, -1]
-#    ]
-#]
+    box = [[list(map(int, input().split())) for _ in range(N)] for _ in range(H)]
 
-q = deque()
+    q = deque()
 
-# 이미 익은 토마토(1)는 BFS 시작점
-for h in range(H):
-    for n in range(N):
-        for m in range(M):
-            if box[h][n][m] == 1:
-                q.append((h, n, m))
+    for z in range(H):
+        for y in range(N):
+            for x in range(M):
+                if box[z][y][x] == 1:
+                    q.append((z, y, x))
 
-dh = [1, -1, 0, 0, 0, 0]
-dn = [0, 0, 1, -1, 0, 0]
-dm = [0, 0, 0, 0, 1, -1]
+    while q:
+        z, y, x = q.popleft()
 
-while q:
-    h, n, m = q.popleft()
-    for i in range(6):
-        nh = h + dh[i]
-        nn = n + dn[i]
-        nm = m + dm[i]
+        for i in range(6):
+            nz = z + dz[i]
+            ny = y + dy[i]
+            nx = x + dx[i]
 
-        # 범위 벗어나면 패스
-        if not (0 <= nh < H and 0 <= nn < N and 0 <= nm < M):
-            continue
+            if not (0 <= nz < H and 0 <= ny < N and 0 <= nx < M):
+                continue
 
-        
-        if box[nh][nn][nm] == 0:
-            box[nh][nn][nm] = box[h][n][m] + 1  # 하루 증가
-            q.append((nh, nn, nm))
+            if box[nz][ny][nx] == 0:
+                box[nz][ny][nx] = box[z][y][x] + 1
+                q.append((nz, ny, nx))
 
+    day = 0
+    for z in range(H):
+        for y in range(N):
+            for x in range(M):
+                if box[z][y][x] == 0:
+                    print(-1)
+                    return
+                day = max(day, box[z][y][x])
 
-days = 0
-for h in range(H):
-    for n in range(N):
-        for m in range(M):
-            if box[h][n][m] == 0:    # 못 익은 토마토 발견
-                print(-1)
-                sys.exit(0)
-            days = max(days, box[h][n][m])
+    print(day - 1)
 
-# 처음 날짜(1)부터 시작했으므로 -1 해줌
-print(days - 1)
+if __name__ == "__main__":
+    main()
